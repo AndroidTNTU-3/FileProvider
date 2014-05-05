@@ -1,5 +1,7 @@
 package com.example.clientprovider;
 
+import java.util.Locale;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -71,13 +74,24 @@ public class MainActivity extends Activity {
 			String name = cursor.getString(cursor.getColumnIndex("fileName"));
 			Uri movieUri = Uri.parse(FILES_URI + name);
 			Log.i("DEBUG:", "path: " + movieUri);
+	       
+		    String type = getMimeType(name);
 
 			Intent intent = new Intent();
 			intent.setAction(android.content.Intent.ACTION_VIEW);
-			intent.setDataAndType(movieUri, "video/*");
+			//intent.setDataAndType(movieUri, "video/*");
+			intent.setDataAndType(movieUri, type);
 			startActivity(intent);
 		}
 		
 	}
+	
+	public static String getMimeType(String uri)
+    {
+        String extension = uri.substring(uri.lastIndexOf("."));
+        String mimeTypeMap = MimeTypeMap.getFileExtensionFromUrl(extension);
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(mimeTypeMap);
+        return mimeType;
+    }
 		
 }

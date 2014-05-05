@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -18,6 +19,7 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 public class MyProvider extends ContentProvider {
 	public static final String FILES = "video";
@@ -182,5 +184,15 @@ public class MyProvider extends ContentProvider {
 	    return afd;
 	}
 	
-	
+	private String getMimeTypeFromPath(String path) {
+        String extension = path;
+        int lastDot = extension.lastIndexOf('.');
+        if (lastDot != -1) {
+            extension = extension.substring(lastDot + 1);
+        }
+        // Convert the URI string to lower case to ensure compatibility with MimeTypeMap (see CB-2185).
+        extension = extension.toLowerCase(Locale.getDefault());
+        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+    }
+    
 }
