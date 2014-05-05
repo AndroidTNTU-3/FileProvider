@@ -20,14 +20,13 @@ import android.os.Build;
 
 public class MainActivity extends Activity {
 	
-	Button button;
-	final Uri FILES_URI = Uri
-		      .parse("content://ru.startandroid.providers.AdressBook/contacts");
+	Button button;	
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
         button = (Button) findViewById(R.id.button1);
         button.setOnClickListener(new OnClickListener() {
 

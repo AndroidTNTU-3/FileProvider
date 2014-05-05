@@ -75,7 +75,6 @@ public class MyProvider extends ContentProvider {
 		Log.i("DEBUG", "uri: " + uri); 
 		switch (mMatcher.match(uri)) {
 	    case FILE_ROOT: // directory
-	    	//cursor =  getCursorForFiles(getPath(uri));
 	    	Log.i("DEBUG", "get files");
 	    	cursor = getListFiles();
 	      break;
@@ -112,13 +111,8 @@ public class MyProvider extends ContentProvider {
 	  }
 	
 	private Cursor getCursorForFiles(String path) {
-		/*String[] columns = { 
-		        "_id",
-		        OpenableColumns.DISPLAY_NAME,
-		        OpenableColumns.SIZE,
-		        "_data"
-		    };*/
-		String[] columns = {"_id", "fileName", "fileSize","path"};
+		
+		String[] columns = {"_id", "fileName", "fileSize", "path"};
 		
 		MatrixCursor c = new MatrixCursor(columns);
 		File baseDir = new File(path);
@@ -130,7 +124,9 @@ public class MyProvider extends ContentProvider {
 		        addRow(c, file, id, file.getAbsolutePath());
 		        id++;
 		      }
-		}
+		} else if (baseDir.isFile()) {
+		      addRow(c, baseDir, 0, baseDir.getAbsolutePath());
+	    }
 		
 		      return c;
 	}
@@ -141,13 +137,11 @@ public class MyProvider extends ContentProvider {
 		 String[] columns = {"_id", "fileName", "path"};
 			
 			MatrixCursor c = new MatrixCursor(columns);
-	        // To get names of all files inside the "Files" folder
+	        // To get names of all files inside the "Video" folder
 	        try {
-	            String[] files = assetManager.list("video");
+	            String[] files = assetManager.list(FILES);
 	 
-	            for(int i=0; i<files.length; i++){
-	            	//InputStream ims = assetManager.open(files[i]);
-	            	//ims.available();
+	            for(int i=0; i < files.length; i++){
 	            	String path = "file:///android_asset/video/" + files[i];
 	            	//String path = "file:///android_asset/" + files[i];
 	            	Log.i("DEBUG:", files[i]);
@@ -165,14 +159,6 @@ public class MyProvider extends ContentProvider {
 	    List<String> segments = uri.getPathSegments();
 
 	    String path = "";
-	   /* for (String segment: segments) {
-	      if (segment.equals("files"))
-	        continue;
-	      path += "/" + segment;
-	    }
-	    if (path == "")
-	      path = "/";*/
-	    
 	    ContextWrapper c = new ContextWrapper(context);
 	    path = c.getFilesDir().getPath();
 
@@ -183,15 +169,17 @@ public class MyProvider extends ContentProvider {
 	public AssetFileDescriptor openAssetFile(Uri uri, String mode) throws FileNotFoundException {
 	    AssetManager am = getContext().getAssets();
 	    String file_name = uri.getLastPathSegment();
+	    
 	    if(file_name == null) 
 	        throw new FileNotFoundException();
 	    AssetFileDescriptor afd = null;
 	    try {
-	        afd = am.openFd("video/" + file_name);
+	        afd = am.openFd(FILES + "/" + file_name);
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
-	    return afd;//super.openAssetFile(uri, mode);
+	    
+	    return afd;
 	}
 	
 	

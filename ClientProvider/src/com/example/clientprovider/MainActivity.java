@@ -20,7 +20,6 @@ import android.widget.SimpleCursorAdapter;
 
 public class MainActivity extends Activity {
 	
-	Button button;
 	ListView listView;
 	LinearLayout linearLayout;
 	
@@ -38,7 +37,6 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		button = (Button) findViewById(R.id.button1);
 		listView = (ListView) findViewById(R.id.listView1);
 		
 		final String[] from = { "_id", "fileName" };
@@ -51,13 +49,6 @@ public class MainActivity extends Activity {
 		listView.setAdapter(sAdapter);
 		listView.setOnItemClickListener(new ListListener());
 		    
-		button.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-
-			}
-		});
 	}
 
 	@Override
@@ -72,7 +63,6 @@ public class MainActivity extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 				long id) {
-			Log.i("DEBUG:", "");
 			/*Uri uri = ContentUris.withAppendedId(FILES_URI, id);
 			cursor = getContentResolver().query(uri, null,
 					null, null, null);*/
@@ -81,8 +71,7 @@ public class MainActivity extends Activity {
 			String name = cursor.getString(cursor.getColumnIndex("fileName"));
 			Uri movieUri = Uri.parse(FILES_URI + name);
 			Log.i("DEBUG:", "path: " + movieUri);
-			//Uri movieUri = Uri.parse(FILES_URI + "/" + name);
-			//Log.i("DEBUG:", "path: " + path);
+
 			Intent intent = new Intent();
 			intent.setAction(android.content.Intent.ACTION_VIEW);
 			intent.setDataAndType(movieUri, "video/*");
@@ -90,7 +79,5 @@ public class MainActivity extends Activity {
 		}
 		
 	}
-	
-	
-
+		
 }
